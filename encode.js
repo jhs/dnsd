@@ -211,7 +211,7 @@ State.prototype.encode = function(full_domain, position_offset, option) {
     , bytes
 
   var i = 0
-  var max_iterations = 40 // Enough for 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+  var max_iterations = 127 // Theoretical upper limit for number of labels in a DNS name; see https://en.wikipedia.org/wiki/Subdomain#Overview
 
   while(++i < max_iterations) {
     if(domain == '') {
