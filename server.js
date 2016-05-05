@@ -16,23 +16,24 @@ var convenient = require('./convenient')
 
 module.exports = createServer
 
-function createServer(handler) {
-  return new Server(handler)
+function createServer(handler, type) {
+  return new Server(handler, type)
 }
 
 
 util.inherits(Server, events.EventEmitter)
-function Server (handler) {
+function Server (handler, type) {
   var self = this
   events.EventEmitter.call(self)
 
   self.log = console
   self.zones = {}
+  self.type = type || 'udp4'
 
   if(handler)
     self.on('request', handler)
 
-  self.udp = dgram.createSocket('udp4')
+  self.udp = dgram.createSocket(self.type)
   self.tcp = net.createServer()
 
   self.udp.on('close', function() { self.close() })
@@ -88,7 +89,7 @@ Server.prototype.listen = function(port, ip, callback) {
   }
 
   self.port = port
-  self.ip   = ip || '0.0.0.0'
+  self.ip   = ip || ( self.type == 'udp6' ? '::/0' : '0.0.0.0' )
 
   if(typeof callback === 'function')
     self.on('listening', callback)
@@ -219,10 +220,10 @@ Response.prototype.end = function(value) {
   var msg = convenient.final_response(self, value)
     , data = msg.toBinary()
 
-  if(self.connection.type == 'udp4' && data.length > 512)
+  if( ( self.connection.type == 'udp4' || self.connection.type == 'udp6' ) && data.length > 512)
     return self.emit('error', 'UDP responses greater than 512 bytes not yet implemented')
 
-  else if(self.connection.type == 'udp4')
+  else if( self.connection.type == 'udp4' || self.connection.type == 'udp6' )
     self.connection.send(data, 0, data.length, self.connection.remotePort, self.connection.remoteAddress, function(er) {
       if(er)
         self.emit('error', er)
