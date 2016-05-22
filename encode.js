@@ -65,6 +65,7 @@ State.prototype.message = function(msg) {
   byte |= msg.recursion_available ? 0x80 : 0x00
   byte |= msg.authenticated       ? 0x20 : 0x00
   byte |= msg.checking_disabled   ? 0x10 : 0x00
+  byte |= msg.not_found           ? 0x03 : 0x00
   byte |= (msg.responseCode & 0x0f)
 
   self.header.writeUInt8(byte, 3)
@@ -211,7 +212,7 @@ State.prototype.encode = function(full_domain, position_offset, option) {
     , bytes
 
   var i = 0
-  var max_iterations = 40 // Enough for 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+  var max_iterations = 80 // Enough for 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
 
   while(++i < max_iterations) {
     if(domain == '') {

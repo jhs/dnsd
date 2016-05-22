@@ -50,6 +50,7 @@ function DNSMessage (body) {
   this.recursion_available = null
   this.authenticated       = null
   this.checking_disabled   = null
+  this.not_found           = null
 
   if(Buffer.isBuffer(body))
     this.parse(body)
