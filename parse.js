@@ -270,6 +270,8 @@ function domain_parts(msg, offset) {
   while(true) {
     if(++i >= 100)
       throw new Error('Too many iterations uncompressing name')
+    else if(msg.length <= offset)
+      throw new Error('Received invalid request')
 
     var byte = msg.readUInt8(offset)
       , flags = byte >> 6

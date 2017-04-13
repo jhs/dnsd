@@ -124,8 +124,8 @@ test('Network queries', function(t) {
 })
 
 test('Invalid queries', function(t) {
-  var reqs = { 'short-query'                  : { message:'Error processing request', error: 'RangeError: Trying to access beyond buffer length' }
-             , 'garbage'                      : { message:'Error processing request', error: 'RangeError: Trying to access beyond buffer length' }
+  var reqs = { 'short-query'                  : { message:'Error processing request', error: 'Error: Received invalid request' }
+             , 'garbage'                      : { message:'Error processing request', error: 'Error: Received invalid request' }
              }
 
   var i = 0
