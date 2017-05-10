@@ -1,7 +1,7 @@
 // Copyright 2012 Iris Couch, all rights reserved.
 //
 // Encode DNS messages
-
+const ip6 = require('ip6');
 var util = require('util')
 
 var constants = require('./constants')
@@ -128,7 +128,7 @@ State.prototype.record = function(section_name, record) {
         rdata = [ +match[1], +match[2], +match[3], +match[4] ]
         break
       case 'IN AAAA':
-        rdata = (record.data || '').split(/:/)
+        rdata = (ip6.normalize(record.data) || '').split(/:/)
         if(rdata.length != 8)
           throw new Error('Bad '+record.type+' record data: ' + JSON.stringify(record))
         rdata = rdata.map(pair_to_buf)

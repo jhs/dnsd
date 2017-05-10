@@ -1,19 +1,37 @@
-{ "name": "dnsd"
-, "description": "Dynamic authoritative name server for Iris services"
-
-, "keywords": [ "dns", "bind", "dnsd", "iris" ]
-, "version": "0.9.6"
-, "author": "Jason Smith <jason.h.smith@gmail.com>"
-, "repository": { "type":"git", "url":"https://github.com/jhs/dnsd" }
-, "licenses": [{ "type": "Apache 2.0", "url": "https://github.com/jhs/dnsd/blob/master/LICENSE" }]
-
-, "engines": { "node": ">= 0.8" }
-, "main": "./named.js"
-
-, "dependencies": { "optimist": "~0.3.4"
-                  , "defaultable": "~0.7.2"
-                  }
-, "devDependencies": { "tap": "~0.2.5"
-                     }
-, "scripts": { "test": "tap test/*.js" }
+{
+  "name": "dnsd",
+  "description": "Dynamic authoritative name server for Iris services",
+  "keywords": [
+    "dns",
+    "bind",
+    "dnsd",
+    "iris"
+  ],
+  "version": "0.9.7",
+  "author": "Jason Smith <jason.h.smith@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jhs/dnsd"
+  },
+  "licenses": [
+    {
+      "type": "Apache 2.0",
+      "url": "https://github.com/jhs/dnsd/blob/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8"
+  },
+  "main": "./named.js",
+  "dependencies": {
+    "defaultable": "~0.7.2",
+    "ip6": "^0.1.5",
+    "optimist": "~0.3.4"
+  },
+  "devDependencies": {
+    "tap": "~0.2.5"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  }
 }
