@@ -118,7 +118,7 @@ DNSMessage.prototype.toBinary = function() {
 
     msg[section] = msg[section] || []
     msg[section].forEach(function(record) {
-      if(record.class != 'IN')
+      if(record.class != 'IN' || record.data === null)
         return
 
       // Make sure records promising data have data.

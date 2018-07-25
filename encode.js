@@ -119,6 +119,8 @@ State.prototype.record = function(section_name, record) {
 
     // Write the rdata. Update the position now (the rdata length value) in case self.encode() runs.
     var match, rdata
+    if(record.data === null)
+      return
     switch (record.class + ' ' + record.type) {
       case 'IN A':
         rdata = record.data || ''
