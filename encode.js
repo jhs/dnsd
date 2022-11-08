@@ -282,6 +282,6 @@ function flatten(state, element) {
 function pair_to_buf(pair) {
   // Convert a string of two hex bytes, e.g. "89ab" to a buffer.
   if(! pair.match(/^[0-9a-fA-F]{4}$/))
-    throw new Error('Bad '+record.type+' record data: ' + JSON.stringify(record))
+    throw new Error('Bad pair data: ' + pair)
   return new Buffer(pair, 'hex')
 }
