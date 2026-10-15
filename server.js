@@ -126,33 +126,50 @@ Server.prototype.on_tcp_connection = function(connection) {
 
   var length = null
     , bufs = []
+    , bytes_received = 0
 
   connection.type = 'tcp'
   connection.server = self
 
-  connection.on('data', function(data) {
-    bufs.push(data)
-    var bytes_received = bufs.reduce(function(state, buf) { return state + buf.length }, 0)
+  connection.on('data', on_data)
+  connection.once('close', stop_reading)
 
-    if(length === null && bytes_received >= 2) {
-      var so_far = Buffer.concat(bufs) // Flatten them all together, it's probably not much data.
-      length = so_far.readUInt16BE(0)
-      bufs = [ so_far.slice(2) ]
+  function stop_reading() {
+    bufs = []
+    connection.removeListener('data', on_data)
+    connection.removeListener('close', stop_reading)
+    connection.pause()
+  }
+
+  function on_data(data) {
+    bytes_received += data.length
+
+    if(length === null && bytes_received >= 2)
+      length = Buffer.concat(bufs.concat([data]), 2).readUInt16BE(0)
+
+    // Responses close the connection, so accept only one length-prefixed query.
+    if(length !== null && bytes_received > 2 + length) {
+      stop_reading()
+      connection.destroy()
+      return
     }
+
+    bufs.push(data)
 
     if(length !== null && bytes_received == 2 + length) {
       // All of the data (plus the 2-byte length prefix) is received.
+      var body = Buffer.concat(bufs).slice(2)
+      stop_reading()
       try {
-        var data = Buffer.concat(bufs)
-          , req = new Request(data, connection)
-          , res = new Response(data, connection)
+        var req = new Request(body, connection)
+          , res = new Response(body, connection)
 
         self.emit('request', req, res)
       } catch(err) {
         self.emit('error', 'Error processing request', err, connection)
       }
     }
-  })
+  }
 }
 
 Server.prototype.on_udp = function(data, rinfo) {
